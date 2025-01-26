@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Category Item</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+      .title {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .event-card {
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .event-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .event-card img {
+        width: 100%;
+        height: 150px;
+        object-fit: fill;
+        background-color: #f0f0f0;
+        display: block;
+        transition: filter 0.3s;
+      }
+
+      .event-card:hover img {
+        filter: brightness(1.1);
+      }
+      .event-card h4 {
+        font-size: 16px;
+        margin: 10px 0 5px;
+        color: #000000;
+      }
+      .event-card p {
+        font-size: 14px;
+        margin: 5px 0;
+        color: #000000;
+      }
+      .pagination a {
+        text-decoration: none;
+      }
+      .search-title {
+        font-weight: bold;
+      }
+      .btn-custom {
+        background-color: #1db954;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 15px;
+      }
+      .btn-custom:hover {
+        opacity: 0.8;
+      }
+      .dropdown-menu {
+        min-width: 300px;
+        border-radius: 8px;
+        padding: 15px;
+      }
+      .flatpickr-calendar {
+        border-radius: 8px !important;
+      }
+      .apply-reset {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+      }
+      .filter-section {
+        margin-top: 20px;
+      }
+      .filter-section h6 {
+        margin-bottom: 15px;
+      }
+      .filter-category .btn {
+        margin: 5px;
+        border-radius: 20px;
+      }
+      .filter-category .btn.active {
+        background-color: #1db954;
+        color: white;
+      }
+      .selected-filters {
+        display: flex;
+        gap: 10px;
+        margin-left: 10px;
+        flex-wrap: wrap; /* Thêm dòng này để các mục xuống hàng khi cần */
+      }
+      .filter-tag {
+        background-color: #e0e0e0;
+        border-radius: 20px;
+        padding: 5px 10px;
+        display: inline-flex;
+        align-items: center;
+      }
+      .filter-tag span {
+        margin-left: 5px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Search Result Section -->
+    <div class="container d-flex justify-content-between mt-4">
+      <div class="search-result search-title">Search result:</div>
+      <div class="filter-bar d-flex gap-3">
+        <!-- Date Range Picker -->
+        <div class="dropdown">
+          <button
+            class="btn btn-custom dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            id="dateButton"
+            aria-expanded="false"
+          >
+            All Dates
+          </button>
+          <div class="dropdown-menu">
+            <h6 class="text-center">Select Date Range</h6>
+            <input
+              type="text"
+              id="datePicker"
+              class="form-control mb-3"
+              placeholder="Select date range"
+            />
+            <div class="apply-reset">
+              <button class="btn btn-outline-secondary" id="resetDateBtn">
+                Reset
+              </button>
+              <button class="btn btn-outline-success" id="applyDateBtn">
+                Apply
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Options -->
+        <div class="dropdown">
+          <button
+            class="btn btn-custom dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Filter
+          </button>
+          <div class="dropdown-menu">
+            <!-- Location Filter -->
+            <div class="filter-section">
+              <h6>Location</h6>
+              <div>
+                <input
+                  type="checkbox"
+                  id="national"
+                  name="location"
+                  value="National"
+                  checked
+                />
+                <label for="national">National</label><br />
+                <input
+                  type="checkbox"
+                  id="hcm"
+                  name="location"
+                  value="Ho Chi Minh city"
+                />
+                <label for="hcm">Ho Chi Minh city</label><br />
+                <input
+                  type="checkbox"
+                  id="hanoi"
+                  name="location"
+                  value="Ha Noi"
+                />
+                <label for="hanoi">Ha Noi</label><br />
+                <input
+                  type="checkbox"
+                  id="dalat"
+                  name="location"
+                  value="Dalat city"
+                />
+                <label for="dalat">Dalat city</label><br />
+                <input
+                  type="checkbox"
+                  id="other"
+                  name="location"
+                  value="Other locations"
+                />
+                <label for="other">Other locations</label>
+              </div>
+            </div>
+
+            <!-- Price Filter -->
+            <div class="filter-section">
+              <h6>Price</h6>
+              <div>
+                <input type="checkbox" id="priceToggle" />
+                <label for="priceToggle">Free</label>
+              </div>
+            </div>
+
+            <!-- Categories Filter -->
+            <div class="filter-section">
+              <h6>Categories</h6>
+              <div class="filter-category">
+                <input
+                  type="checkbox"
+                  id="categoryMusic"
+                  name="category"
+                  value="Music"
+                />
+                <label for="categoryMusic">Music</label><br />
+                <input
+                  type="checkbox"
+                  id="categoryTheaters"
+                  name="category"
+                  value="Theaters & Art"
+                />
+                <label for="categoryTheaters">Theaters & Art</label><br />
+                <input
+                  type="checkbox"
+                  id="categorySport"
+                  name="category"
+                  value="Sport"
+                />
+                <label for="categorySport">Sport</label><br />
+                <input
+                  type="checkbox"
+                  id="categoryOthers"
+                  name="category"
+                  value="Others"
+                />
+                <label for="categoryOthers">Others</label>
+              </div>
+            </div>
+
+            <!-- Apply and Reset Buttons -->
+            <div class="apply-reset">
+              <button class="btn btn-outline-secondary" id="resetFilterBtn">
+                Reset
+              </button>
+              <button class="btn btn-success" id="applyFilterBtn">Apply</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Filters -->
+        <div id="selectedFilters" class="selected-filters"></div>
+      </div>
+    </div>
+
+    <!-- Category Section -->
+    <h2 class="title">Category Item</h2>
+    <div class="container py-4">
+      <div class="row gy-4">
+        <!-- Event Cards -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d1/91/35/4b4ca883013ffa19ccd3ce6889e96d69.png"
+              alt="Event Image"
+            />
+            <h4>9X GARDEN</h4>
+            <p>From 439.000đ</p>
+            <p>25 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d4/e9/12/b9cdaf59b65d91e9977e882902eb9e3d.jpg"
+              alt="Event Image"
+            />
+            <h4>Terrarium Workshop</h4>
+            <p>From 500.000đ</p>
+            <p>30 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d4/12/c6/0076baaaee9b8c4d13afc0b3aaeeedec.jpg"
+              alt="Event Image"
+            />
+            <h4>Spring Celebration</h4>
+            <p>From 300.000đ</p>
+            <p>1 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d1/91/35/4b4ca883013ffa19ccd3ce6889e96d69.png"
+              alt="Event Image"
+            />
+            <h4>Art & Music</h4>
+            <p>From 250.000đ</p>
+            <p>5 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2F99%2F2d%2Fda%2F6bd5f943fb17da4ef4d3458ae3e400f8.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>9X GARDEN</h4>
+            <p>From 439.000đ</p>
+            <p>25 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2Faf%2Fc4%2F05%2F9425feab8d0b777666bcb598cba719f3.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>Terrarium Workshop</h4>
+            <p>From 500.000đ</p>
+            <p>30 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d4/12/c6/0076baaaee9b8c4d13afc0b3aaeeedec.jpg"
+              alt="Event Image"
+            />
+            <h4>Spring Celebration</h4>
+            <p>From 300.000đ</p>
+            <p>1 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2F99%2F2d%2Fda%2F6bd5f943fb17da4ef4d3458ae3e400f8.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>Art & Music</h4>
+            <p>From 250.000đ</p>
+            <p>5 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2Faf%2Fc4%2F05%2F9425feab8d0b777666bcb598cba719f3.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>9X GARDEN</h4>
+            <p>From 439.000đ</p>
+            <p>25 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d4/e9/12/b9cdaf59b65d91e9977e882902eb9e3d.jpg"
+              alt="Event Image"
+            />
+            <h4>Terrarium Workshop</h4>
+            <p>From 500.000đ</p>
+            <p>30 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2Faf%2Fc4%2F05%2F9425feab8d0b777666bcb598cba719f3.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>Spring Celebration</h4>
+            <p>From 300.000đ</p>
+            <p>1 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d1/91/35/4b4ca883013ffa19ccd3ce6889e96d69.png"
+              alt="Event Image"
+            />
+            <h4>Art & Music</h4>
+            <p>From 250.000đ</p>
+            <p>5 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d1/91/35/4b4ca883013ffa19ccd3ce6889e96d69.png"
+              alt="Event Image"
+            />
+            <h4>9X GARDEN</h4>
+            <p>From 439.000đ</p>
+            <p>25 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d4/e9/12/b9cdaf59b65d91e9977e882902eb9e3d.jpg"
+              alt="Event Image"
+            />
+            <h4>Terrarium Workshop</h4>
+            <p>From 500.000đ</p>
+            <p>30 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d4/12/c6/0076baaaee9b8c4d13afc0b3aaeeedec.jpg"
+              alt="Event Image"
+            />
+            <h4>Spring Celebration</h4>
+            <p>From 300.000đ</p>
+            <p>1 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d1/91/35/4b4ca883013ffa19ccd3ce6889e96d69.png"
+              alt="Event Image"
+            />
+            <h4>Art & Music</h4>
+            <p>From 250.000đ</p>
+            <p>5 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2F99%2F2d%2Fda%2F6bd5f943fb17da4ef4d3458ae3e400f8.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>9X GARDEN</h4>
+            <p>From 439.000đ</p>
+            <p>25 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2Faf%2Fc4%2F05%2F9425feab8d0b777666bcb598cba719f3.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>Terrarium Workshop</h4>
+            <p>From 500.000đ</p>
+            <p>30 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d4/12/c6/0076baaaee9b8c4d13afc0b3aaeeedec.jpg"
+              alt="Event Image"
+            />
+            <h4>Spring Celebration</h4>
+            <p>From 300.000đ</p>
+            <p>1 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2F99%2F2d%2Fda%2F6bd5f943fb17da4ef4d3458ae3e400f8.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>Art & Music</h4>
+            <p>From 250.000đ</p>
+            <p>5 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2Faf%2Fc4%2F05%2F9425feab8d0b777666bcb598cba719f3.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>9X GARDEN</h4>
+            <p>From 439.000đ</p>
+            <p>25 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d4/e9/12/b9cdaf59b65d91e9977e882902eb9e3d.jpg"
+              alt="Event Image"
+            />
+            <h4>Terrarium Workshop</h4>
+            <p>From 500.000đ</p>
+            <p>30 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2Faf%2Fc4%2F05%2F9425feab8d0b777666bcb598cba719f3.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>Spring Celebration</h4>
+            <p>From 300.000đ</p>
+            <p>1 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d1/91/35/4b4ca883013ffa19ccd3ce6889e96d69.png"
+              alt="Event Image"
+            />
+            <h4>Art & Music</h4>
+            <p>From 250.000đ</p>
+            <p>5 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2Faf%2Fc4%2F05%2F9425feab8d0b777666bcb598cba719f3.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>9X GARDEN</h4>
+            <p>From 439.000đ</p>
+            <p>25 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d4/e9/12/b9cdaf59b65d91e9977e882902eb9e3d.jpg"
+              alt="Event Image"
+            />
+            <h4>Terrarium Workshop</h4>
+            <p>From 500.000đ</p>
+            <p>30 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2Faf%2Fc4%2F05%2F9425feab8d0b777666bcb598cba719f3.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>Spring Celebration</h4>
+            <p>From 300.000đ</p>
+            <p>1 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d1/91/35/4b4ca883013ffa19ccd3ce6889e96d69.png"
+              alt="Event Image"
+            />
+            <h4>Art & Music</h4>
+            <p>From 250.000đ</p>
+            <p>5 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2Faf%2Fc4%2F05%2F9425feab8d0b777666bcb598cba719f3.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>9X GARDEN</h4>
+            <p>From 439.000đ</p>
+            <p>25 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d4/e9/12/b9cdaf59b65d91e9977e882902eb9e3d.jpg"
+              alt="Event Image"
+            />
+            <h4>Terrarium Workshop</h4>
+            <p>From 500.000đ</p>
+            <p>30 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2Faf%2Fc4%2F05%2F9425feab8d0b777666bcb598cba719f3.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>Spring Celebration</h4>
+            <p>From 300.000đ</p>
+            <p>1 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d1/91/35/4b4ca883013ffa19ccd3ce6889e96d69.png"
+              alt="Event Image"
+            />
+            <h4>Art & Music</h4>
+            <p>From 250.000đ</p>
+            <p>5 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2Faf%2Fc4%2F05%2F9425feab8d0b777666bcb598cba719f3.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>9X GARDEN</h4>
+            <p>From 439.000đ</p>
+            <p>25 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d4/e9/12/b9cdaf59b65d91e9977e882902eb9e3d.jpg"
+              alt="Event Image"
+            />
+            <h4>Terrarium Workshop</h4>
+            <p>From 500.000đ</p>
+            <p>30 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2Faf%2Fc4%2F05%2F9425feab8d0b777666bcb598cba719f3.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>Spring Celebration</h4>
+            <p>From 300.000đ</p>
+            <p>1 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d1/91/35/4b4ca883013ffa19ccd3ce6889e96d69.png"
+              alt="Event Image"
+            />
+            <h4>Art & Music</h4>
+            <p>From 250.000đ</p>
+            <p>5 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2Faf%2Fc4%2F05%2F9425feab8d0b777666bcb598cba719f3.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>9X GARDEN</h4>
+            <p>From 439.000đ</p>
+            <p>25 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d4/e9/12/b9cdaf59b65d91e9977e882902eb9e3d.jpg"
+              alt="Event Image"
+            />
+            <h4>Terrarium Workshop</h4>
+            <p>From 500.000đ</p>
+            <p>30 Jan, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2Faf%2Fc4%2F05%2F9425feab8d0b777666bcb598cba719f3.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <h4>Spring Celebration</h4>
+            <p>From 300.000đ</p>
+            <p>1 Feb, 2025</p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="event-card">
+            <img
+              src="https://images.tkbcdn.com/2/608/332/ts/ds/d1/91/35/4b4ca883013ffa19ccd3ce6889e96d69.png"
+              alt="Event Image"
+            />
+            <h4>Art & Music</h4>
+            <p>From 250.000đ</p>
+            <p>5 Feb, 2025</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            <a class="page-link" href="#">&laquo; Previous</a>
+          </li>
+          <li class="page-item active"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#">Next &raquo;</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <iframe
+      src="footer.html"
+      width="100%"
+      height="400px"
+      frameborder="0"
+      style="
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: none;
+        overflow: hidden;
+      "
+      scrolling="no"
+    ></iframe>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <!-- Custom JS -->
+    <script>
+      // Initialize Flatpickr
+      const datePicker = flatpickr("#datePicker", {
+        mode: "range",
+        dateFormat: "d M, Y",
+        onClose: function (selectedDates) {
+          console.log("Selected dates:", selectedDates);
+        },
+      });
+
+      const dateButton = document.getElementById("dateButton");
+
+      // Reset Date Button
+      document
+        .getElementById("resetDateBtn")
+        .addEventListener("click", function () {
+          datePicker.clear();
+          dateButton.textContent = "Select Date";
+        });
+
+      // Apply Date Button
+      document
+        .getElementById("applyDateBtn")
+        .addEventListener("click", function () {
+          const selectedDates = datePicker.selectedDates;
+          if (selectedDates.length === 2) {
+            const formattedFromDate = selectedDates[0].toLocaleDateString(
+              "en-GB",
+              {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              }
+            );
+            const formattedToDate = selectedDates[1].toLocaleDateString(
+              "en-GB",
+              {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              }
+            );
+            dateButton.textContent = `${formattedFromDate} - ${formattedToDate}`;
+          } else {
+            alert("Please select a valid date range!");
+          }
+        });
+
+      const selectedFilters = document.getElementById("selectedFilters");
+
+      // Update selected filters dynamically for categories
+      function updateSelectedFilters() {
+        selectedFilters.innerHTML = "";
+
+        // Location (Lấy tất cả các địa chỉ được chọn)
+        const selectedLocations = document.querySelectorAll(
+          'input[name="location"]:checked'
+        );
+        selectedLocations.forEach((location) => {
+          const locationTag = document.createElement("div");
+          locationTag.className = "filter-tag";
+          locationTag.innerHTML = `${location.value} <span onclick="removeFilter(this)">x</span>`;
+          selectedFilters.appendChild(locationTag);
+        });
+
+        // Price
+        if (document.getElementById("priceToggle").checked) {
+          const priceTag = document.createElement("div");
+          priceTag.className = "filter-tag";
+          priceTag.innerHTML = `Free <span onclick="removeFilter(this)">x</span>`;
+          selectedFilters.appendChild(priceTag);
+        }
+
+        // Categories
+        const selectedCategories = document.querySelectorAll(
+          'input[name="category"]:checked'
+        );
+        selectedCategories.forEach((category) => {
+          const categoryTag = document.createElement("div");
+          categoryTag.className = "filter-tag";
+          categoryTag.innerHTML = `${category.value} <span onclick="removeFilter(this)">x</span>`;
+          selectedFilters.appendChild(categoryTag);
+        });
+      }
+
+      // Hàm xóa filter khi nhấn vào dấu x
+      function removeFilter(element) {
+        // Xóa phần tử cha của dấu x (tức là thẻ chứa filter)
+        const filterTag = element.parentElement;
+        filterTag.remove();
+
+        // Lấy giá trị của filter bị xóa
+        const filterValue = filterTag.textContent
+          .trim()
+          .replace("x", "")
+          .trim();
+
+        // Xóa filter khỏi các checkbox tương ứng
+        if (filterValue === "Free") {
+          document.getElementById("priceToggle").checked = false;
+        } else {
+          // Xử lý cho các filter khác (location và category)
+          const locationCheckboxes = document.querySelectorAll(
+            'input[name="location"]'
+          );
+          const categoryCheckboxes = document.querySelectorAll(
+            'input[name="category"]'
+          );
+
+          locationCheckboxes.forEach((checkbox) => {
+            if (checkbox.value === filterValue) {
+              checkbox.checked = false;
+            }
+          });
+
+          categoryCheckboxes.forEach((checkbox) => {
+            if (checkbox.value === filterValue) {
+              checkbox.checked = false;
+            }
+          });
+        }
+      }
+
+      // Apply Filter Button
+      document
+        .getElementById("applyFilterBtn")
+        .addEventListener("click", function () {
+          updateSelectedFilters();
+          const dropdownMenus = document.querySelectorAll(".dropdown-menu");
+          dropdownMenus.forEach((menu) => {
+            menu.classList.remove("show");
+          });
+        });
+
+      // Reset Filter Button
+      document
+        .getElementById("resetFilterBtn")
+        .addEventListener("click", function () {
+          document.querySelector(
+            'input[name="location"][value="National"]'
+          ).checked = true;
+          document.getElementById("priceToggle").checked = false;
+          selectedFilters.innerHTML = "";
+        });
+    </script>
+  </body>
+</html>

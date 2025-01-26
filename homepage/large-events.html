@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tickify</title>
+    <style>
+      /* CSS Styles */
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      header {
+        background-color: #00a651;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+      }
+
+      .logo {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .logo span {
+        color: #ffdd00;
+      }
+
+      .search-bar {
+        display: flex;
+        align-items: center;
+      }
+
+      .search-bar input {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        margin-right: 10px;
+      }
+
+      .search-bar button {
+        background-color: #ffdd00;
+        color: #00a651;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 12px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+
+      nav {
+        background-color: #333;
+        color: white;
+        display: flex;
+        justify-content: center;
+        padding: 10px 0;
+      }
+
+      nav a {
+        color: white;
+        text-decoration: none;
+        margin: 0 20px;
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 5px;
+        padding: 10px;
+        margin: 0 40px;
+      }
+
+      .carousel {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: 300px; /* Kích thước cố định cho carousel */
+        display: flex;
+        justify-content: center; /* Đảm bảo cân bằng hai bên */
+        border-radius: 8px;
+      }
+
+      .slides {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+      }
+
+      .event-card {
+        flex: 0 0 100%; /* Đảm bảo mỗi card chiếm toàn bộ carousel */
+        box-sizing: border-box;
+        padding: 0; /* Loại bỏ khoảng cách */
+        position: relative;
+        background-color: #f5f5f5;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .event-card img {
+        width: 100%;
+        height: 100%; /* Đặt ảnh luôn vừa khung */
+        object-fit: fill;
+      }
+
+      .view-btn {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        background-color: #00a651;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 12px;
+        cursor: pointer;
+        z-index: 10; /* Đảm bảo nút nằm trên ảnh */
+      }
+
+      .prev,
+      .next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        z-index: 10;
+      }
+
+      .prev {
+        left: 20px; /* Căn cố định vị trí nút trái */
+      }
+
+      .next {
+        right: 20px; /* Căn cố định vị trí nút phải */
+      }
+
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .calendar,
+      .map {
+        background-color: #f5f5f5;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 16px;
+        width: 100%;
+        max-width: 300px;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe
+      src="header.html"
+      width="100%"
+      height="0"
+      frameborder="0"
+      style="
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: none;
+        overflow: hidden;
+      "
+      scrolling="no"
+    ></iframe>
+
+    <div class="content-grid">
+      <div class="carousel">
+        <div class="slides">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F608%2F332%2Fts%2Fds%2Feb%2F3d%2F05%2F7c43bc9234ec67b4f08651f6e892bad4.jpg&w=640&q=75"
+              alt="Event Image"
+            />
+            <button class="view-btn">View details</button>
+          </div>
+          <div class="event-card">
+            <img
+              src="https://i.ytimg.com/vi/TdDnx2fr5gg/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB92DiHoE9AXstayS9XIcghkC9wSw"
+              alt="Event Image"
+            />
+            <button class="view-btn">View details</button>
+          </div>
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F608%2F332%2Fts%2Fds%2Fbc%2F39%2F97%2F0bcedd8331d17bee81b65261a29976c2.jpg&w=384&q=75"
+              alt="Event Image 3"
+            />
+            <button class="view-btn">View details</button>
+          </div>
+        </div>
+        <button class="prev">❮</button>
+        <button class="next">❯</button>
+      </div>
+
+      <div class="carousel">
+        <div class="slides">
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F608%2F332%2Fts%2Fds%2Fd0%2F00%2Fd7%2F0596146f09bc0a37f14f2d8b0aeb3d1b.jpeg&w=384&q=75"
+              alt="Event Image"
+            />
+            <button class="view-btn">View details</button>
+          </div>
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F608%2F332%2Fts%2Fds%2F51%2Fb4%2F2f%2F753fa09de83c3b675867be409387e713.jpg&w=384&q=75"
+              alt="Event Image"
+            />
+            <button class="view-btn">View details</button>
+          </div>
+          <div class="event-card">
+            <img
+              src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F608%2F332%2Fts%2Fds%2Ff7%2Fc2%2F1a%2Fd8b6343fa22566789a9be23530d0dc41.png&w=384&q=75"
+              alt="Event Image 3"
+            />
+            <button class="view-btn">View details</button>
+          </div>
+        </div>
+        <button class="prev">❮</button>
+        <button class="next">❯</button>
+      </div>
+    </div>
+
+    <iframe
+      src="special-events.html"
+      width="100%"
+      height="400px"
+      frameborder="0"
+      style="
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: none;
+        overflow: hidden;
+      "
+      scrolling="no"
+    ></iframe>
+
+    <iframe
+      src="trending-events.html"
+      width="100%"
+      height="290px"
+      frameborder="0"
+      style="
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: none;
+        overflow: hidden;
+      "
+      scrolling="no"
+    ></iframe>
+
+    <iframe
+      src="top-picks-for-you.html"
+      width="100%"
+      height="400px"
+      frameborder="0"
+      style="
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: none;
+        overflow: hidden;
+      "
+      scrolling="no"
+    ></iframe>
+
+    <iframe
+      src="recommendation.html"
+      width="100%"
+      height="300px"
+      frameborder="0"
+      style="
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: none;
+        overflow: hidden;
+      "
+      scrolling="no"
+    ></iframe>
+
+    <iframe
+      src="all-events.html"
+      width="100%"
+      height="930px"
+      frameborder="0"
+      style="
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: none;
+        overflow: hidden;
+      "
+      scrolling="no"
+    ></iframe>
+
+    <iframe
+      src="footer.html"
+      width="100%"
+      height="400px"
+      frameborder="0"
+      style="
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: none;
+        overflow: hidden;
+      "
+      scrolling="no"
+    ></iframe>
+
+    <script>
+      // Lấy tất cả các carousel trong trang
+      const carousels = document.querySelectorAll(".carousel");
+
+      // Lặp qua từng carousel để thêm logic hoạt động
+      carousels.forEach((carousel, index) => {
+        const slides = carousel.querySelector(".slides");
+        const eventCards = carousel.querySelectorAll(".event-card");
+        const prevButton = carousel.querySelector(".prev");
+        const nextButton = carousel.querySelector(".next");
+
+        let currentIndex = 0;
+        const totalSlides = eventCards.length;
+
+        // Hàm cập nhật vị trí slide
+        function updateSlide(index) {
+          slides.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        // Hàm tự động chuyển slide
+        function autoSlide() {
+          currentIndex = (currentIndex + 1) % totalSlides;
+          updateSlide(currentIndex);
+        }
+
+        // Xử lý sự kiện nút "Next"
+        nextButton.addEventListener("click", () => {
+          currentIndex = (currentIndex + 1) % totalSlides;
+          updateSlide(currentIndex);
+        });
+
+        // Xử lý sự kiện nút "Previous"
+        prevButton.addEventListener("click", () => {
+          currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+          updateSlide(currentIndex);
+        });
+
+        // Tự động chuyển slide với thời gian riêng biệt cho từng carousel
+        let slideInterval = setInterval(autoSlide, 2000 + index * 1000); // Thời gian khác nhau cho mỗi carousel
+
+        // Dừng tự động chuyển khi rê chuột vào carousel
+        carousel.addEventListener("mouseenter", () => {
+          clearInterval(slideInterval);
+        });
+
+        // Tiếp tục tự động chuyển khi rê chuột ra ngoài
+        carousel.addEventListener("mouseleave", () => {
+          slideInterval = setInterval(autoSlide, 2000 + index * 1000);
+        });
+      });
+      // Đảm bảo nút luôn căn giữa hình ảnh
+      window.addEventListener("resize", () => {
+        const carousels = document.querySelectorAll(".carousel");
+        carousels.forEach((carousel) => {
+          const slides = carousel.querySelector(".slides");
+          const eventCard = carousel.querySelector(".event-card img");
+          const prevButton = carousel.querySelector(".prev");
+          const nextButton = carousel.querySelector(".next");
+
+          if (eventCard) {
+            const cardHeight = eventCard.clientHeight; // Lấy chiều cao ảnh
+            prevButton.style.top = `${cardHeight / 2}px`; // Căn giữa nút trái
+            nextButton.style.top = `${cardHeight / 2}px`; // Căn giữa nút phải
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Booking Form</title>
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f7f7f7;
+        color: #333;
+      }
+
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        background-color: black;
+      }
+
+      .event-card {
+        display: flex;
+        flex-direction: row;
+        background: linear-gradient(135deg, #706969, #514b4b);
+        border-radius: 15px;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        max-width: 1300px;
+        width: 100%;
+      }
+
+      .event-details {
+        padding: 25px;
+        flex: 1;
+        color: #fff;
+      }
+
+      .event-details h1 {
+        font-size: 28px;
+        margin: 0 0 15px;
+        line-height: 1.4;
+        font-weight: bold;
+      }
+
+      .event-details p {
+        margin: 8px 0;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .event-details .price {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 20px 0;
+        color: #f3c623;
+      }
+
+      .event-details .btn {
+        background-color: #1db954;
+        color: #fff;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .event-details .btn:hover {
+        background-color: #17a045;
+        transform: scale(1.05);
+      }
+
+      .event-image {
+        flex: 1;
+      }
+
+      .event-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 15px;
+      }
+
+      .event-info {
+        background: linear-gradient(135deg, #ffffff, #f7f7f7);
+        color: #333;
+        padding: 25px;
+        /* border-top: 2px solid #1db954; */
+        border-radius: 0 0 15px 15px;
+        line-height: 1.8;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+        font-family: "Roboto", sans-serif;
+        margin: 0 90px;
+      }
+
+      .event-info h2 {
+        font-size: 28px;
+        color: #1db954;
+        font-weight: bold;
+        margin-bottom: 15px;
+        position: relative;
+        text-transform: uppercase;
+        text-align: center;
+      }
+
+      .event-info h2::after {
+        content: "";
+        display: block;
+        width: 50px;
+        height: 3px;
+        background: #1db954;
+        margin-top: 5px;
+        border-radius: 2px;
+      }
+
+      .event-info ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .event-info li {
+        margin-bottom: 15px;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+      }
+
+      .event-info li::before {
+        content: "✔";
+        color: #1db954;
+        margin-right: 10px;
+        font-weight: bold;
+      }
+
+      .event-info li span {
+        font-size: 15px;
+        color: #555;
+        font-weight: 500;
+      }
+
+      .event-info li:hover {
+        background: rgba(29, 185, 84, 0.1);
+        border-radius: 5px;
+        padding: 5px 10px;
+        transition: all 0.3s ease;
+      }
+
+      @media (max-width: 768px) {
+        .event-card {
+          flex-direction: column;
+        }
+
+        .event-image img {
+          border-radius: 0;
+          border-bottom-left-radius: 15px;
+          border-bottom-right-radius: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="event-card">
+        <div class="event-details">
+          <h1>Nhà Hát Kịch IDECAF: Cái gì Vui Vẻ thì mình Ưu Tiên</h1>
+          <p><strong>Date & Time:</strong> 16:00 - 19:00, 30 Jan, 2025</p>
+          <p><strong>+ 4 other day(s)</strong></p>
+          <p><strong>Venue:</strong> Nhà Hát Kịch IDECAF</p>
+          <p>Số 28 Lê Thánh Tôn, Bến Nghé Ward, 1 District, Ho Chi Minh City</p>
+          <p class="price">From 270.000 ₫</p>
+          <button class="btn">Select Showtime</button>
+        </div>
+        <div class="event-image">
+          <img
+            src="https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F608%2F332%2Fts%2Fds%2F2b%2F1a%2Fa5%2F371b379ac0bdd94e091cfc20ae2ce99d.jpg&w=640&q=75"
+            alt="Event Poster"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="event-info">
+      <h2>Event Information Details</h2>
+      <ul>
+        <li>
+          <strong>Performance:</strong> A comedy show filled with joy and
+          laughter.
+        </li>
+        <li>
+          <strong>Description:</strong> "Cái gì Vui Vẻ thì mình Ưu Tiên" brings
+          you an unforgettable evening of laughter, emotions, and a touch of
+          cultural humor.
+        </li>
+        <li>
+          <strong>Venue Address:</strong> Số 28 Lê Thánh Tôn, Bến Nghé Ward, 1
+          District, Ho Chi Minh City.
+        </li>
+        <li><strong>Duration:</strong> 3 hours</li>
+        <li><strong>Seating Capacity:</strong> 500 seats</li>
+      </ul>
+
+      <!-- Google Maps Section -->
+      <div class="map-container">
+        <h3>Location Map</h3>
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.489165568831!2d106.70175527528224!3d10.777138092321223!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3175292fcb15ce03%3A0x8e4157d1d3581a9!2zMjggTMOqIFRoYW5oIFTDom4sIELhuqNuIE5naMSpLCBRdeG6rW4gMSwgVGjhuqFuaCBwaOG7kSBIw6AgTWluaCBDaXR5!5e0!3m2!1sen!2s!4v1700000000000!5m2!1sen!2s"
+          width="100%"
+          height="400"
+          style="
+            border: 0;
+            border-radius: 15px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+          "
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+    </div>
+  </body>
+</html>
