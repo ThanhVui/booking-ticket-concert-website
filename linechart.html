@@ -1,0 +1,446 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chart Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        color: white;
+        font-family: "Inter", sans-serif;
+        min-height: 100vh;
+      }
+
+      /* Container chính */
+      .max-w-6xl {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 1.5rem;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+
+      /* Header với legend và buttons */
+      .flex.justify-between {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Legend dots */
+      .w-4.h-4 {
+        transition: all 0.3s ease;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      }
+
+      .w-4.h-4:hover {
+        transform: scale(1.3);
+      }
+
+      /* Buttons */
+      button {
+        transition: all 0.3s ease;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 9999px; /* Rounded full */
+      }
+
+      .bg-gray-800 {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .bg-gray-800:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+      }
+
+      .bg-green-500 {
+        background: linear-gradient(45deg, #22c55e, #16a34a);
+        color: white;
+      }
+
+      .bg-green-500:hover {
+        background: linear-gradient(45deg, #16a34a, #15803d);
+        transform: translateY(-2px);
+      }
+
+      /* Chart container */
+      .relative {
+        padding: 2.5rem;
+        position: relative;
+      }
+
+      /* Axis labels */
+      .absolute.left-0 {
+        transform: translateX(-50%) translateY(-50%) -rotate-90;
+        top: 50%;
+        left: 20px; /* Tăng khoảng cách bên trái để chữ "Doanh thu" cách xa trục Y */
+        transform-origin: center;
+      }
+
+      .absolute.right-0 {
+        transform: translateX(50%) rotate(90deg);
+        top: 50%;
+        right: 10px; /* Giảm khoảng cách bên phải để chữ "Số vé bán" gần chart hơn */
+      }
+
+      .absolute span {
+        font-size: 0.875rem;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        opacity: 0.8;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.4rem 0.8rem;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .absolute span:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(1.05);
+      }
+
+      /* Canvas container */
+      .h-96 {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        position: relative;
+        z-index: 10;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 640px) {
+        .flex.justify-between {
+          flex-direction: column;
+          gap: 1.5rem;
+          padding: 1rem;
+        }
+
+        .flex.space-x-2 {
+          width: 100%;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+
+        .absolute span {
+          font-size: 0.75rem;
+          padding: 0.3rem 0.6rem;
+        }
+
+        .h-96 {
+          padding: 1rem;
+        }
+
+        .relative {
+          padding: 1.5rem;
+        }
+      }
+
+      /* Tùy chỉnh legend */
+      .chart-legend {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 1.5rem;
+      }
+
+      /* Tùy chỉnh tooltip */
+      .chart-tooltip {
+        background: rgba(0, 0, 0, 0.9);
+        border-radius: 0.75rem;
+        padding: 0.75rem 1.25rem;
+        color: white;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+      }
+    </style>
+  </head>
+  <body class="flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-6xl p-4">
+      <div class="flex justify-between items-center mb-4">
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-2">
+            <span class="w-4 h-4 bg-purple-600 rounded-full"></span>
+            <span class="font-medium">Doanh thu</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="w-4 h-4 bg-green-500 rounded-full"></span>
+            <span class="font-medium">Số vé bán</span>
+          </div>
+        </div>
+        <div class="flex space-x-2">
+          <button class="px-4 py-2 bg-gray-800 rounded-full" onclick="updateChart('24h')">24 giờ</button>
+          <button class="px-4 py-2 bg-gray-800 rounded-full" onclick="updateChart('7d')">7 ngày</button>
+          <button class="px-4 py-2 bg-gray-800 rounded-full" onclick="updateChart('30d')">30 ngày</button>
+        </div>
+      </div>
+      <div class="relative">
+        <div class="h-96">
+          <canvas id="chart"></canvas>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script>
+      let chart;
+
+      // Dữ liệu mẫu cho các khoảng thời gian
+      const data24h = {
+        labels: [
+          "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"
+        ],
+        datasets: [
+          {
+            label: "Doanh thu",
+            borderColor: "rgba(128, 0, 128, 1)",
+            backgroundColor: "rgba(128, 0, 128, 0.1)",
+            data: [0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4],
+            yAxisID: "y",
+            borderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+          {
+            label: "Số vé bán",
+            borderColor: "rgba(34, 197, 94, 1)",
+            backgroundColor: "rgba(34, 197, 94, 0.1)",
+            data: [0, 0.5, 1, 1.5, 2, 2.5, 2, 1.5, 1, 0.5, 0, 0.5, 1, 1.5, 2],
+            yAxisID: "y",
+            borderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+        ],
+      };
+
+      const data7d = {
+        labels: ["01/02", "02/02", "03/02", "04/02", "05/02", "06/02", "07/02"],
+        datasets: [
+          {
+            label: "Doanh thu",
+            borderColor: "rgba(128, 0, 128, 1)",
+            backgroundColor: "rgba(128, 0, 128, 0.1)",
+            data: [0, 2, 4, 6, 5, 3, 1],
+            yAxisID: "y",
+            borderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+          {
+            label: "Số vé bán",
+            borderColor: "rgba(34, 197, 94, 1)",
+            backgroundColor: "rgba(34, 197, 94, 0.1)",
+            data: [0, 1, 2, 3, 2.5, 1.5, 0.5],
+            yAxisID: "y",
+            borderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+        ],
+      };
+
+      const data30d = {
+        labels: [
+          "24/01", "26/01", "28/01", "30/01", "01/02", "03/02", "05/02", "07/02", "09/02", "11/02", "13/02", "15/02", "17/02", "19/02", "21/02"
+        ],
+        datasets: [
+          {
+            label: "Doanh thu",
+            borderColor: "rgba(128, 0, 128, 1)",
+            backgroundColor: "rgba(128, 0, 128, 0.1)",
+            data: [0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, 0, 1, 2],
+            yAxisID: "y",
+            borderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+          {
+            label: "Số vé bán",
+            borderColor: "rgba(34, 197, 94, 1)",
+            backgroundColor: "rgba(34, 197, 94, 0.1)",
+            data: [0, 0.5, 1, 1.5, 2, 2.5, 3, 2.5, 2, 1.5, 1, 0.5, 0, 0.5, 1],
+            yAxisID: "y",
+            borderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+        ],
+      };
+
+      // Khởi tạo biểu đồ với dữ liệu 24 giờ làm mặc định
+      const ctx = document.getElementById("chart");
+      if (ctx) {
+        const context = ctx.getContext("2d");
+        if (context) {
+          chart = new Chart(context, {
+            type: "line",
+            data: data24h,
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  type: "linear",
+                  display: true,
+                  position: "left",
+                  suggestedMin: 0,
+                  suggestedMax: 7,
+                  ticks: {
+                    color: "white",
+                    stepSize: 1,
+                    padding: 10,
+                  },
+                  grid: {
+                    color: "rgba(255, 255, 255, 0.1)",
+                    drawBorder: false,
+                  },
+                  title: {
+                    display: false,
+                  },
+                },
+                x: {
+                  beginAtZero: true,
+                  ticks: {
+                    color: "white",
+                    padding: 10,
+                  },
+                  grid: {
+                    color: "rgba(255, 255, 255, 0.1)",
+                    drawBorder: false,
+                  },
+                  title: {
+                    display: false,
+                  },
+                },
+              },
+              plugins: {
+                legend: {
+                  display: true,
+                  position: "bottom",
+                  align: "center",
+                  labels: {
+                    color: "white",
+                    font: {
+                      size: 14,
+                      weight: "500",
+                    },
+                    padding: 15,
+                    boxWidth: 20,
+                    boxHeight: 2,
+                    generateLabels: function (chart) {
+                      return chart.data.datasets.map((dataset, index) => {
+                        let total = dataset.data.reduce((sum, value) => sum + value, 0);
+                        return {
+                          text: `${dataset.label}: ${total.toFixed(1)} ${dataset.label === "Doanh thu" ? "VND" : ""}`,
+                          fillStyle: dataset.backgroundColor,
+                          strokeStyle: dataset.borderColor,
+                          lineWidth: 2,
+                          hidden: chart.getDatasetMeta(index).hidden,
+                          datasetIndex: index,
+                        };
+                      });
+                    },
+                  },
+                  onClick: null,
+                },
+                tooltip: {
+                  enabled: true,
+                  mode: "index",
+                  intersect: false,
+                  backgroundColor: "rgba(0, 0, 0, 0.9)",
+                  titleColor: "white",
+                  bodyColor: "white",
+                  borderColor: "rgba(255, 255, 255, 0.15)",
+                  borderWidth: 1,
+                  padding: 12,
+                  caretSize: 6,
+                  cornerRadius: 10,
+                  displayColors: false,
+                  callbacks: {
+                    title: function (tooltipItems) {
+                      return tooltipItems[0].label;
+                    },
+                    label: function (tooltipItem) {
+                      const dataset = chart.data.datasets[tooltipItem.datasetIndex];
+                      const value = tooltipItem.raw || 0;
+                      if (dataset.label === "Doanh thu") {
+                        return `Doanh thu: ${value} VND`;
+                      } else {
+                        return `Số vé bán: ${value}`;
+                      }
+                    },
+                  },
+                },
+              },
+              hover: {
+                mode: "nearest",
+                intersect: true,
+              },
+              animation: {
+                duration: 1000,
+                easing: "easeInOutQuad",
+              },
+            },
+          });
+        } else {
+          console.error("Cannot get 2D context for canvas!");
+        }
+      } else {
+        console.error("Canvas element not found!");
+      }
+
+      // Hàm cập nhật biểu đồ khi click vào nút
+      function updateChart(period) {
+        if (!chart) {
+          console.error("Chart is not initialized!");
+          return;
+        }
+
+        let newData;
+        switch (period) {
+          case "24h":
+            newData = data24h;
+            break;
+          case "7d":
+            newData = data7d;
+            break;
+          case "30d":
+            newData = data30d;
+            break;
+          default:
+            newData = data24h;
+        }
+
+        // Cập nhật dữ liệu biểu đồ với hiệu ứng
+        chart.data.labels = newData.labels;
+        chart.data.datasets = newData.datasets;
+        chart.update({ duration: 500 }); // Cập nhật với animation mượt mà
+
+        // Cập nhật style nút (chỉ một nút active có background green-500)
+        const buttons = document.querySelectorAll(".flex.space-x-2 button");
+        buttons.forEach((btn) => {
+          btn.classList.remove("bg-green-500", "bg-gray-800");
+          if (btn.getAttribute("onclick").includes(period)) {
+            btn.classList.add("bg-green-500"); // Tất cả các nút active đều chuyển sang bg-green-500
+          } else {
+            btn.classList.add("bg-gray-800"); // Các nút không active quay về bg-gray-800
+          }
+        });
+      }
+
+      // Đặt trạng thái mặc định khi tải trang (24 giờ active)
+      document.addEventListener("DOMContentLoaded", () => {
+        updateChart("24h"); // Đặt 24 giờ làm mặc định và active
+      });
+    </script>
+  </body>
+</html>
