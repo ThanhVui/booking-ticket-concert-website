@@ -1,438 +1,687 @@
-<!-- Filter Form -->
-<div class="container content-space-1">
-    <form>
-      <div class="row gx-2">
-        <div class="col-lg mb-2 mb-lg-0">
-          <!-- Form -->
-          <label for="searchPropertyFilterForm" class="visually-hidden form-label">Search property</label>
-          <div class="input-group input-group-merge">
-            <span class="input-group-prepend input-group-text">
-              <i class="bi-search"></i>
-            </span>
-            <input type="text" class="form-control form-control-sm" id="searchPropertyFilterForm" placeholder="Search property" aria-label="Search property" value="London, England">
-          </div>
-          <!-- End Form -->
-        </div>
-        <!-- End Col -->
-  
-        <div class="col-auto mb-2 mb-lg-0">
-          <!-- Dropdown -->
-          <div class="dropdown">
-            <a class="btn btn-white btn-sm dropdown-toggle" href="#" id="priceFilterFormDropdown" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Price</a>
-  
-            <div class="dropdown-menu dropdown-menu-end dropdown-card" aria-labelledby="priceFilterFormDropdown" style="min-width: 21rem;">
-              <!-- Card -->
-              <div class="card card-sm">
-                <div class="card-body">
-                  <!-- Bar Chart -->
-                  <div class="position-relative overflow-hidden" style="height: 6rem; width: 18rem;">
-                    <div class="position-absolute w-100 overflow-hidden">
-                      <div style="height: 6rem; width: 18rem;">
-                        <canvas class="js-chart"
-                                data-hs-chartjs-options='{
-                                  "type": "bar",
-                                  "data": {
-                                    "labels": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-                                    "datasets": [{
-                                      "data": [2, 3, 5, 7, 8, 5, 3, 2, 3, 6, 5, 4, 7, 5, 4, 3, 2],
-                                      "backgroundColor": "#e7eaf3",
-                                      "borderColor": "#e7eaf3"
-                                    }]
-                                  },
-                                  "options": {
-                                    "responsive": true,
-                                    "scales": {
-                                      "yAxes": [{
-                                        "display": false,
-                                        "gridLines": {
-                                          "display": false,
-                                          "drawBorder": false
-                                        },
-                                        "ticks": {
-                                          "beginAtZero": true
-                                        }
-                                      }],
-                                      "xAxes": [{
-                                        "display": false,
-                                        "gridLines": {
-                                          "display": false,
-                                          "drawBorder": false
-                                        }
-                                      }]
-                                    },
-                                    "tooltips": {
-                                      "custom": false
-                                    }
-                                  }
-                                }'></canvas>
-                      </div>
+<%-- 
+    Document   : createEvent
+    Created on : Feb 25, 2025, 5:44:28 PM
+    Author     : Tang Thanh Vui - CE180901
+--%>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Create Event</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+        <style>
+            /* General styling */
+            body {
+                background-color: #1F2937; /* Dark gray background */
+                color: #D1D5DB; /* Light gray text */
+                font-family: 'Arial', sans-serif;
+            }
+
+            /* Sidebar */
+            .sidebar {
+                background-color: #15803D; /* Green sidebar */
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+                transition: all 0.3s ease;
+            }
+            .sidebar a:hover {
+                color: #A7F3D0; /* Light green on hover */
+                transition: color 0.2s ease;
+            }
+
+            /* Tab buttons */
+            .tab-button {
+                width: 32px;
+                height: 32px;
+                background-color: #4B5563; /* Gray */
+                border: none;
+                transition: background-color 0.3s ease;
+            }
+            .tab-button.active {
+                background-color: #15803D; /* Green when active */
+                transform: scale(1.1);
+            }
+            .tab-button:hover {
+                background-color: #6B7280; /* Lighter gray on hover */
+            }
+
+            /* Upload area */
+            .upload-area {
+                background-color: #4B5563; /* Gray */
+                border: 2px dashed #6B7280;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+            .upload-area:hover {
+                border-color: #15803D; /* Green dashed border on hover */
+                background-color: #374151;
+            }
+
+            /* Form elements */
+            .form-control, .form-select {
+                background-color: #4B5563;
+                color: #D1D5DB;
+                border: 1px solid #6B7280;
+                border-radius: 6px;
+                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            }
+            .form-control:focus, .form-select:focus {
+                border-color: #15803D;
+                box-shadow: 0 0 5px rgba(21, 128, 61, 0.5);
+                background-color: #374151;
+            }
+            .form-control::placeholder {
+                color: #9CA3AF; /* Lighter gray placeholder */
+            }
+            .form-label {
+                font-weight: 500;
+                color: #E5E7EB;
+            }
+
+            /* Seat section */
+            .seat-container {
+                background-color: #374151; /* Darker gray */
+                border-radius: 8px;
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            }
+            .seat-grid {
+                display: grid;
+                gap: 15px;
+                margin-top: 15px;
+            }
+            .seat-input {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                background-color: #4B5563; /* Uniform gray background */
+                padding: 10px;
+                border-radius: 6px;
+                border: 1px solid #6B7280;
+                transition: transform 0.2s ease, box-shadow 0.3s ease;
+            }
+            .seat-input:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 2px 8px rgba(21, 128, 61, 0.3);
+            }
+            .seat-input label {
+                margin-bottom: 0;
+                color: #D1D5DB;
+                font-weight: 400;
+            }
+            #seatSummary {
+                color: #34D399; /* Light green text */
+                font-weight: bold;
+                margin-top: 15px;
+                padding: 10px;
+                background-color: #4A5568; /* Slightly lighter gray */
+                border-radius: 6px;
+                border-left: 4px solid #10B981; /* Green border */
+                box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+                display: block; /* Đảm bảo hiển thị */
+            }
+
+            /* Show time section */
+            .ticket-section {
+                background-color: #374151;
+                border-radius: 8px;
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            }
+            .show-time {
+                background-color: #4B5563;
+                border-radius: 6px;
+                padding: 15px;
+                margin-bottom: 15px;
+                transition: all 0.3s ease;
+                border: 1px solid #6B7280;
+            }
+            .show-time:hover {
+                background-color: #6B7280;
+                box-shadow: 0 2px 8px rgba(21, 128, 61, 0.3);
+            }
+            .saved-ticket {
+                background-color: #374151;
+                border-radius: 6px;
+                padding: 10px;
+                margin-top: 10px;
+                border-left: 4px solid #15803D;
+                box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Buttons */
+            .add-ticket-btn, .save-seat-btn {
+                background-color: #15803D; /* Green */
+                color: white;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 6px;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+                margin-left: 5px;
+            }
+            .add-ticket-btn:hover, .save-seat-btn:hover {
+                background-color: #166534; /* Darker green */
+                transform: translateY(-2px);
+            }
+            .btn-danger {
+                background-color: #DC2626; /* Red */
+                border: none;
+                padding: 6px 12px;
+                border-radius: 6px;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+            }
+            .btn-danger:hover {
+                background-color: #B91C1C; /* Darker red */
+                transform: translateY(-2px);
+            }
+
+            /* Datetime-local inputs */
+            .datetime-local {
+                background-color: #4B5563;
+                color: #D1D5DB;
+                border: 1px solid #6B7280;
+                border-radius: 6px;
+                padding: 8px;
+                width: 100%;
+                cursor: pointer;
+            }
+            .datetime-local:focus {
+                border-color: #15803D;
+                box-shadow: 0 0 5px rgba(21, 128, 61, 0.5);
+            }
+
+            /* Modal */
+            .modal-content {
+                background-color: #374151;
+                border: none;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            }
+            .modal-header {
+                border-bottom: 1px solid #6B7280;
+            }
+            .modal-footer {
+                border-top: 1px solid #6B7280;
+            }
+            .btn-secondary {
+                background-color: #6B7280;
+                border: none;
+                transition: background-color 0.3s ease;
+            }
+            .btn-secondary:hover {
+                background-color: #4B5563;
+            }
+            .btn-success {
+                background-color: #15803D;
+                border: none;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+            }
+            .btn-success:hover {
+                background-color: #166534;
+                transform: translateY(-2px);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar giữ nguyên -->
+                <div class="col-md-3 col-lg-2 sidebar p-4 min-vh-100">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="rounded-circle bg-success me-3" style="width: 40px; height: 40px;"></div>
+                        <span class="fs-4 fw-bold">Organizer Center</span>
                     </div>
-  
-                    <div id="foregroundBarChartDoubleResult" class="position-absolute overflow-hidden">
-                      <div style="height: 6rem; width: 18rem;">
-                        <canvas class="js-chart"
-                                data-hs-chartjs-options='{
-                                  "type": "bar",
-                                  "data": {
-                                    "labels": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-                                    "datasets": [{
-                                      "data": [2, 3, 5, 7, 8, 5, 3, 2, 3, 6, 5, 4, 7, 5, 4, 3, 2],
-                                      "backgroundColor": "#377dff",
-                                      "borderColor": "#377dff"
-                                    }]
-                                  },
-                                  "options": {
-                                    "scales": {
-                                      "yAxes": [{
-                                        "display": false,
-                                        "gridLines": {
-                                          "display": false,
-                                          "drawBorder": false
-                                        },
-                                        "ticks": {
-                                          "beginAtZero": true
-                                        }
-                                      }],
-                                      "xAxes": [{
-                                        "display": false,
-                                        "gridLines": {
-                                          "display": false,
-                                          "drawBorder": false
-                                        }
-                                      }]
-                                    },
-                                    "tooltips": {
-                                      "custom": false
-                                    }
-                                  }
-                                }'></canvas>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- End Bar Chart -->
-  
-                  <div class="range-slider">
-                    <div class="js-nouislider"
-                         data-hs-nouislider-options='{
-                             "range": {
-                               "min": 0,
-                               "max": 1000
-                             },
-                             "start": [250, 750],
-                             "result_min_target_el": "#rangeSliderExampleDouble4MinResult",
-                             "result_max_target_el": "#rangeSliderExampleDouble4MaxResult",
-                             "foreground_target_el": "#foregroundBarChartDoubleResult"
-                           }'>
-                    </div>
-                  </div>
-  
-                  <div class="row justify-content-center mt-5">
-                    <div class="col">
-                      <span class="d-block small mb-1">Min price:</span>
-                      <input type="text" class="form-control form-control-sm" id="rangeSliderExampleDouble4MinResult">
-                    </div>
-                    <!-- End Col -->
-  
-                    <div class="col">
-                      <span class="d-block small mb-1">Max price:</span>
-                      <input type="text" class="form-control form-control-sm" id="rangeSliderExampleDouble4MaxResult">
-                    </div>
-                    <!-- End Col -->
-                  </div>
-                  <!-- End Row -->
+                    <ul class="list-unstyled">
+                        <li class="mb-3"><a href="#" class="text-white text-decoration-none d-flex align-items-center"><i class="fas fa-calendar-alt me-2"></i><span>Sự kiện của tôi</span></a></li>
+                        <li class="mb-3"><a href="#" class="text-white text-decoration-none d-flex align-items-center"><i class="fas fa-file-alt me-2"></i><span>Quản lý báo cáo</span></a></li>
+                        <li class="mb-3"><a href="#" class="text-white text-decoration-none d-flex align-items-center"><i class="fas fa-users me-2"></i><span>Điều khoản cho Ban tổ chức</span></a></li>
+                    </ul>
                 </div>
-  
-                <div class="card-footer border-top">
-                  <div class="d-flex justify-content-end gap-2">
-                    <a class="btn btn-white btn-sm" href="#">Clear</a>
-                    <a class="btn btn-primary btn-sm" href="#">Save</a>
-                  </div>
-                </div>
-              </div>
-              <!-- End Card -->
-            </div>
-          </div>
-          <!-- End Dropdown -->
-        </div>
-        <!-- End Col -->
-  
-        <div class="col-auto mb-2 mb-lg-0">
-          <!-- Dropdown -->
-          <div class="dropdown">
-            <a class="btn btn-white btn-sm dropdown-toggle" href="#" id="bedsFilterFormDropdown" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">All beds</a>
-  
-            <div class="dropdown-menu dropdown-menu-end dropdown-card" aria-labelledby="bedsFilterFormDropdown" style="min-width: 25rem;">
-              <!-- Card -->
-              <div class="card card-sm">
-                <div class="card-body">
-                  <!-- Radio Button Group -->
-                  <div class="btn-group btn-group-segment d-flex" role="group" aria-label="Beds radio button group">
-                    <input type="radio" class="btn-check flex-fill" name="bedsBtnRadio" id="bedsBtnRadioStudio" autocomplete="off" checked>
-                    <label class="btn btn-sm" for="bedsBtnRadioStudio">Studio</label>
-  
-                    <input type="radio" class="btn-check flex-fill" name="bedsBtnRadio" id="bedsBtnRadio1" autocomplete="off">
-                    <label class="btn btn-sm" for="bedsBtnRadio1">1+</label>
-  
-                    <input type="radio" class="btn-check flex-fill" name="bedsBtnRadio" id="bedsBtnRadio2" autocomplete="off">
-                    <label class="btn btn-sm" for="bedsBtnRadio2">2+</label>
-  
-                    <input type="radio" class="btn-check flex-fill" name="bedsBtnRadio" id="bedsBtnRadio3" autocomplete="off">
-                    <label class="btn btn-sm" for="bedsBtnRadio3">3+</label>
-  
-                    <input type="radio" class="btn-check flex-fill" name="bedsBtnRadio" id="bedsBtnRadio4" autocomplete="off">
-                    <label class="btn btn-sm" for="bedsBtnRadio4">4+</label>
-                  </div>
-                  <!-- End Radio Button Group -->
-                </div>
-              </div>
-              <!-- End Card -->
-            </div>
-          </div>
-          <!-- End Dropdown -->
-        </div>
-        <!-- End Col -->
-  
-        <div class="col-auto mb-2 mb-lg-0">
-          <!-- Dropdown -->
-          <div class="dropdown">
-            <a class="btn btn-white btn-sm dropdown-toggle" href="#" id="propertyTypeFilterFormDropdown" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Property type</a>
-  
-            <div class="dropdown-menu dropdown-menu-end dropdown-card" aria-labelledby="propertyTypeFilterFormDropdown" style="min-width: 20rem;">
-              <!-- Card -->
-              <div class="card card-sm">
-                <div class="card-body">
-                  <div class="d-grid gap-2">
-                    <!-- Check -->
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="propertyTypeHouseCheckbox" checked>
-                      <label class="form-check-label" for="propertyTypeHouseCheckbox">
-                        House
-                        <span class="d-block small text-muted">Find a cozy place</span>
-                      </label>
+
+                <!-- Main Content -->
+                <div class="col-md-9 col-lg-10 p-4">
+                    <!-- Header -->
+                    <div class="bg-dark p-3 rounded-top mb-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center gap-3">
+                                <button class="tab-button rounded-circle d-flex align-items-center justify-content-center text-white" onclick="showTab('event-info', event)">1</button>
+                                <span>Thông tin sự kiện</span>
+                                <button class="tab-button rounded-circle d-flex align-items-center justify-content-center text-white" onclick="showTab('time-logistics', event)">2</button>
+                                <span>Thời gian & Loại vé</span>
+                            </div>
+                            <div class="d-flex gap-3">
+                                <button class="btn btn-light text-success">Lưu</button>
+                                <button class="btn btn-success" onclick="nextTab()">Tiếp tục</button>
+                            </div>
+                        </div>
                     </div>
-                    <!-- End Check -->
-  
-                    <!-- Check -->
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="propertyTypeFlatsCheckbox">
-                      <label class="form-check-label" for="propertyTypeFlatsCheckbox">
-                        Flats
-                        <span class="d-block small text-muted">Flats for sale or to rent</span>
-                      </label>
+
+                    <!-- Tabs Content -->
+                    <div id="event-info" class="tab-content">
+                        <!-- Giữ nguyên nội dung tab event-info -->
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="upload-area p-4 rounded text-center">
+                                    <i class="fas fa-upload fs-2 mb-2"></i>
+                                    <p>Thêm logo sự kiện (720x958)</p>
+                                    <input type="file" name="logoEvent" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="upload-area p-4 rounded text-center">
+                                    <i class="fas fa-upload fs-2 mb-2"></i>
+                                    <p>Thêm ảnh nền sự kiện (1280x720)</p>
+                                    <input type="file" name="logoBanner" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="upload-area p-4 rounded text-center">
+                                    <i class="fas fa-upload fs-2 mb-2"></i>
+                                    <p>Logo Organizer (275x275)</p>
+                                    <input type="file" name="logoBanner" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Organizer Name</label>
+                                <input type="text" class="form-control" placeholder="Organizer Name">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Event Name</label>
+                                <input type="text" class="form-control" placeholder="Event Name">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Event Category</label>
+                                <select class="form-select">
+                                    <option value="">-- Please Select Category --</option>
+                                    <c:forEach var="category" items="${listCategories}">
+                                        <option value="${category.categoryId}">${category.categoryName}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Event Location</label>
+                                <input type="text" class="form-control" placeholder="Enter location name">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Event Information</label>
+                                <textarea class="form-control" rows="5" placeholder="Description"></textarea>
+                            </div>
+                        </div>
                     </div>
-                    <!-- End Check -->
-  
-                    <!-- Check -->
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="propertyTypeMultiFamilyCheckbox" checked>
-                      <label class="form-check-label" for="propertyTypeMultiFamilyCheckbox">
-                        Multi-family
-                        <span class="d-block small text-muted">Multi-family houses or flats</span>
-                      </label>
+
+                    <!-- Tab Time & Logistics -->
+                    <div id="time-logistics" class="tab-content d-none">
+                        <div class="row g-4">
+                            <!-- Type Of Event -->
+                            <div class="col-12">
+                                <label class="form-label">Type Of Event</label>
+                                <select class="form-select" id="eventType" onchange="toggleEventType()">
+                                    <option value="">-- Please Select Type --</option>
+                                    <option value="standingevent">Standing Event</option>
+                                    <option value="seatedevent">Seated Event</option>
+                                </select>
+                            </div>
+
+                            <!-- Seat Section for Seated Event -->
+                            <div class="col-12 seat-container d-none" id="seatSection">
+                                <h5 class="text-white">Quản lý ghế (Seated Event)</h5>
+                                <div id="seatsContainer" class="seat-grid">
+                                    <div class="seat-input">
+                                        <label class="text-white">Hàng:</label>
+                                        <input type="text" name="seatRow[]" class="form-control" required>
+                                        <label class="text-white">Số ghế:</label>
+                                        <input type="text" name="seatNumber[]" class="form-control" required>
+                                        <label class="text-white">Trạng thái:</label>
+                                        <select name="seatStatus[]" class="form-select" required>
+                                            <option value="Available">Available</option>
+                                            <option value="Reserved">Reserved</option>
+                                        </select>
+                                        <button type="button" class="btn btn-danger" onclick="removeSeat(this)">Xóa</button>
+                                        <button type="button" class="save-seat-btn" onclick="saveSeat(this)">Lưu ghế</button>
+                                    </div>
+                                </div>
+                                <button type="button" class="add-ticket-btn mt-3" onclick="addSeat()">+ Thêm ghế</button>
+                                <div id="seatSummary" class="mt-3"></div>
+                            </div>
+
+                            <!-- Show Times -->
+                            <div class="col-12 ticket-section" id="showTimeSection">
+                                <h5 class="text-white">Thời gian diễn ra sự kiện</h5>
+                                <div id="showTimeList">
+                                    <!-- Default Show Time -->
+                                    <div class="show-time">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="text-white">Show Time</h6>
+                                            <button class="add-ticket-btn" onclick="removeShowTime(this)">Xóa</button>
+                                        </div>
+                                        <div class="form-group filter-group">
+                                            <label for="showStartDate_1" class="text-white">Ngày bắt đầu</label>
+                                            <input type="datetime-local" name="showStartDate" id="showStartDate_1" class="datetime-local" placeholder="Chọn ngày bắt đầu">
+                                        </div>
+                                        <div class="form-group filter-group">
+                                            <label for="showEndDate_1" class="text-white">Ngày kết thúc</label>
+                                            <input type="datetime-local" name="showEndDate" id="showEndDate_1" class="datetime-local" placeholder="Chọn ngày kết thúc">
+                                        </div>
+                                        <div id="ticketList_1" class="mt-3"></div>
+                                        <button class="add-ticket-btn w-100 mt-3" data-bs-toggle="modal" data-bs-target="#newTicketModal" data-show-time="1">+ Thêm loại vé</button>
+                                    </div>
+                                </div>
+                                <button class="add-ticket-btn w-100 mt-3" onclick="addNewShowTime()">+ Tạo Show Time mới</button>
+                            </div>
+                        </div>
                     </div>
-                    <!-- End Check -->
-  
-                    <!-- Check -->
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="propertyTypeFarmsLandCheckbox">
-                      <label class="form-check-label" for="propertyTypeFarmsLandCheckbox">
-                        Farms/land
-                        <span class="d-block small text-muted">Own a property for farming</span>
-                      </label>
+
+                    <!-- Modal for creating new ticket -->
+                    <div class="modal fade" id="newTicketModal" tabindex="-1" aria-labelledby="newTicketModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="newTicketModalLabel">Tạo loại vé mới</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="ticket-form">
+                                        <div class="form-group">
+                                            <label for="modalTicketName" class="text-white">Tên loại vé</label>
+                                            <input type="text" class="form-control" id="modalTicketName" placeholder="Ví dụ: VIP">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="modalTicketDescription" class="text-white">Mô tả</label>
+                                            <textarea class="form-control" id="modalTicketDescription" placeholder="Ví dụ: VIP seating" rows="2"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="modalTicketPrice" class="text-white">Giá (VND)</label>
+                                            <input type="number" class="form-control" id="modalTicketPrice" placeholder="Ví dụ: 150000" step="1000">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="modalTicketQuantity" class="text-white">Số lượng</label>
+                                            <input type="number" class="form-control" id="modalTicketQuantity" placeholder="Ví dụ: 50">
+                                        </div>
+                                        <div class="form-group filter-group">
+                                            <label for="modalTicketStartDate" class="text-white">Ngày bắt đầu bán</label>
+                                            <input type="datetime-local" name="modalTicketStartDate" id="modalTicketStartDate" class="datetime-local" placeholder="Chọn ngày bắt đầu bán">
+                                        </div>
+                                        <div class="form-group filter-group">
+                                            <label for="modalTicketEndDate" class="text-white">Ngày kết thúc bán</label>
+                                            <input type="datetime-local" name="modalTicketEndDate" id="modalTicketEndDate" class="datetime-local" placeholder="Chọn ngày kết thúc bán">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                    <button type="button" class="btn btn-success" onclick="saveNewTicket()">Lưu</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <!-- End Check -->
-                  </div>
                 </div>
-  
-                <div class="card-footer border-top">
-                  <div class="d-flex justify-content-end gap-2">
-                    <a class="btn btn-white btn-sm" href="#">Clear</a>
-                    <a class="btn btn-primary btn-sm" href="#">Save</a>
-                  </div>
-                </div>
-              </div>
-              <!-- End Card -->
             </div>
-          </div>
-          <!-- End Dropdown -->
         </div>
-        <!-- End Col -->
-  
-        <div class="col-auto mb-2 mb-lg-0">
-          <a class="btn btn-white btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#realEstateMoreFiltersModal">
-            <i class="bi-sliders me-2"></i> More
-          </a>
-        </div>
-        <!-- End Col -->
-      </div>
-      <!-- End Row -->
-    </form>
-  </div>
-  <!-- End Filter Form -->
-  
-  <!-- ========== SECONDARY CONTENTS ========== -->
-  <!-- Real Estate More Filters Modal -->
-  <div class="modal fade" id="realEstateMoreFiltersModal" tabindex="-1" aria-labelledby="realEstateMoreFiltersModalLabel" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <!-- Header -->
-        <div class="modal-header">
-          <h3 class="modal-title" id="realEstateMoreFiltersModalLabel">More filters</h3>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <!-- End Header -->
-  
-        <!-- Body -->
-        <div class="modal-body">
-          <label class="input-label">Status</label>
-  
-          <!-- Radio Button Group -->
-          <div class="btn-group btn-group-segment d-flex mb-4" role="group" aria-label="Status radio button group">
-            <input type="radio" class="btn-check flex-fill" name="statusBtnRadioMoreFilters" id="statusBtnRadioBuyMoreFilters" autocomplete="off" checked>
-            <label class="btn btn-sm" for="statusBtnRadioBuyMoreFilters">Buy</label>
-  
-            <input type="radio" class="btn-check flex-fill" name="statusBtnRadioMoreFilters" id="statusBtnRadioRentMoreFilters" autocomplete="off">
-            <label class="btn btn-sm" for="statusBtnRadioRentMoreFilters">Rent</label>
-  
-            <input type="radio" class="btn-check flex-fill" name="statusBtnRadioMoreFilters" id="statusBtnRadioSoldMoreFilters" autocomplete="off">
-            <label class="btn btn-sm" for="statusBtnRadioSoldMoreFilters">Sold</label>
-          </div>
-          <!-- End Radio Button Group -->
-  
-          <div class="mb-4">
-            <label for="featuresLabelMoreFilters" class="form-label">Features</label>
-  
-            <!-- Select -->
-            <select id="featuresLabelMoreFilters" class="js-select form-select" multiple
-                    data-hs-tom-select-options='{
-                      "hideSearch": true
-                    }'>
-              <option value="bedValueAny" selected>Any</option>
-              <option value="Pets allowed">Pets allowed</option>
-              <option value="Parking lot">Parking lot</option>
-              <option value="Balcony">Balcony</option>
-              <option value="Garden">Garden</option>
-              <option value="Laundry">Laundry</option>
-              <option value="Heating">Heating</option>
-              <option value="AC">AC</option>
-            </select>
-            <!-- End Select -->
-          </div>
-  
-          <div class="row gx-3">
-            <div class="col-6">
-              <div class="mb-4">
-                <label for="bedsLabelMoreFilters" class="form-label">Beds</label>
-  
-                <!-- Select -->
-                <select id="bedsLabelMoreFilters" class="js-select form-select"
-                        data-hs-tom-select-options='{
-                          "hideSearch": true
-                        }'>
-                  <option value="bedValueAny" selected>Any</option>
-                  <option value="bedValueMin1">1</option>
-                  <option value="bedValueMin2">2</option>
-                  <option value="bedValueMin3">3</option>
-                  <option value="bedValueMin4">4</option>
-                  <option value="bedValueMin5">5</option>
-                </select>
-                <!-- End Select -->
-              </div>
-            </div>
-            <!-- End Col -->
-  
-            <div class="col-6">
-              <div class="mb-4">
-                <label for="bathLabelMoreFilters" class="form-label">Baths</label>
-  
-                <!-- Select -->
-                <select id="bathLabelMoreFilters" class="js-select form-select"
-                        data-hs-tom-select-options='{
-                          "hideSearch": true
-                        }'>
-                  <option value="bedValueAny" selected>Any</option>
-                  <option value="bedValueMax1">1</option>
-                  <option value="bedValueMax2">2</option>
-                  <option value="bedValueMax3">3</option>
-                  <option value="bedValueMax4">4</option>
-                  <option value="bedValueMax5">5</option>
-                </select>
-                <!-- End Select -->
-              </div>
-            </div>
-            <!-- End Col -->
-          </div>
-          <!-- End Row -->
-  
-          <label for="squareFeetLabelMoreFilters" class="form-label">Square feet</label>
-  
-          <div class="row gx-3">
-            <div class="col-6">
-              <div class="mb-4">
-                <input type="text" class="form-control" id="squareFeetLabelMoreFilters" placeholder="No min">
-              </div>
-            </div>
-            <!-- End Col -->
-  
-            <div class="col-6">
-              <div class="mb-4">
-                <input type="text" class="form-control" placeholder="No max">
-              </div>
-            </div>
-            <!-- End Col -->
-          </div>
-          <!-- End Row -->
-  
-          <div class="mb-4">
-            <label for="lotSizeLabelMoreFilters" class="form-label">Lot size</label>
-  
-            <!-- Select -->
-            <select id="lotSizeLabelMoreFilters" class="js-select form-select"
-                    data-hs-tom-select-options='{
-                      "hideSearch": true
-                    }'>
-              <option value="No Min">No Min</option>
-              <option value="2000+ sqft">2000+ sqft</option>
-              <option value="3000+ sqft">3000+ sqft</option>
-              <option value="4000+ sqft">4000+ sqft</option>
-              <option value="5000+ sqft">5000+ sqft</option>
-              <option value="7500+ sqft">7500+ sqft</option>
-              <option value="0.25+ acre / 10890+ sqft">0.25+ acre / 10890+ sqft</option>
-              <option value="0.5+ acre / 21780+ sqft">0.5+ acre / 21780+ sqft</option>
-              <option value="1+ acre">1+ acre</option>
-              <option value="2+ acre">2+ acre</option>
-              <option value="5+ acre">5+ acre</option>
-              <option value="10+ acre">10+ acre</option>
-            </select>
-            <!-- End Select -->
-          </div>
-  
-          <div class="mb-4">
-            <label for="yearBuiltLabelMoreFilters" class="form-label">Year built</label>
-  
-            <div class="row gx-3">
-              <div class="col-6">
-                <input type="text" class="form-control" id="yearBuiltLabelMoreFilters" placeholder="Min year">
-              </div>
-              <!-- End Col -->
-  
-              <div class="col-6">
-                <input type="text" class="form-control" placeholder="Max year">
-              </div>
-              <!-- End Col -->
-            </div>
-            <!-- End Row -->
-          </div>
-        </div>
-        <!-- End Body -->
-  
-        <div class="card-footer border-top">
-          <div class="d-flex justify-content-end gap-3">
-            <a class="btn btn-white" href="#">Clear</a>
-            <a class="btn btn-primary" href="#">Show 100+ homes</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- ========== END SECONDARY CONTENTS ========== -->
+
+        <script>
+            // Hàm toggle hiển thị Seat Section dựa trên loại sự kiện
+            function toggleEventType() {
+                const eventType = document.getElementById('eventType').value;
+                const seatSection = document.getElementById('seatSection');
+                const showTimeSection = document.getElementById('showTimeSection');
+
+                if (eventType === 'seatedevent') {
+                    seatSection.classList.remove('d-none');
+                    calculateSeatSummary(); // Tính toán số hàng và cột khi chọn Seated Event
+                } else {
+                    seatSection.classList.add('d-none');
+                }
+                showTimeSection.classList.remove('d-none'); // Luôn hiển thị Show Time
+            }
+
+            // Hàm thêm ghế mới
+            function addSeat() {
+                const seatsContainer = document.getElementById('seatsContainer');
+                const newSeat = document.createElement('div');
+                newSeat.className = 'seat-input'; // Đảm bảo có lớp seat-input
+                newSeat.innerHTML = `
+                    <label class="text-white">Hàng:</label>
+                    <input type="text" name="seatRow[]" class="form-control" required>
+                    <label class="text-white">Số ghế:</label>
+                    <input type="text" name="seatNumber[]" class="form-control" required>
+                    <label class="text-white">Trạng thái:</label>
+                    <select name="seatStatus[]" class="form-select" required>
+                        <option value="Available">Available</option>
+                        <option value="Reserved">Reserved</option>
+                    </select>
+                    <button type="button" class="btn btn-danger" onclick="removeSeat(this)">Xóa</button>
+                    <button type="button" class="save-seat-btn" onclick="saveSeat(this)">Lưu ghế</button>
+                `;
+                seatsContainer.appendChild(newSeat);
+                calculateSeatSummary();
+            }
+
+            // Hàm xóa ghế
+            function removeSeat(button) {
+                button.closest('.seat-input').remove();
+                calculateSeatSummary(); // Tính lại tổng sau khi xóa
+            }
+
+            // Hàm lưu ghế (gọi calculateSeatSummary)
+            function saveSeat(button) {
+                calculateSeatSummary(); // Tính lại tổng khi nhấn nút "Lưu ghế"
+            }
+
+            // Hàm tính toán số hàng, cột và tổng số ghế từ danh sách ghế (cho phép hàng trùng lặp)
+            function calculateSeatSummary() {
+                console.log("Calculating seat summary...");
+                let rowCount = 0; // Số lượng thực tế của các hàng (bao gồm trùng lặp)
+                let totalSeats = 0; // Tổng số ghế, tính từng hàng riêng lẻ
+                let maxSeatsPerRow = 0; // Lưu số ghế tối đa trong một hàng (tổng cột)
+
+                // Lấy dữ liệu từ các input
+                const seatRows = document.querySelectorAll('input[name="seatRow[]"]');
+                const seatNumbers = document.querySelectorAll('input[name="seatNumber[]"]');
+
+                console.log("Seat Rows length:", seatRows.length, "Seat Numbers length:", seatNumbers.length);
+
+                // Kiểm tra nếu không có ghế, hiển thị mặc định 0
+                if (seatRows.length === 0 || seatNumbers.length === 0) {
+                    const seatSummary = document.getElementById('seatSummary');
+                    if (seatSummary) {
+                        seatSummary.innerHTML = `
+                            <span>Tổng số hàng: 0, Tổng số cột: 0, Tổng số ghế: 0</span>
+                        `;
+                        console.log("No seats found, set default to 0.");
+                    } else {
+                        console.error("Phần tử #seatSummary không tồn tại trong DOM!");
+                    }
+                    return;
+                }
+
+                // Kiểm tra nếu số lượng input hàng và số ghế khớp
+                if (seatRows.length !== seatNumbers.length) {
+                    console.error("Số lượng hàng và số ghế không khớp!");
+                    return;
+                }
+
+                // Lưu trữ số ghế cho từng hàng (để tính tổng cột là max)
+                const seatsByRow = {};
+
+                // Duyệt qua từng cặp hàng và số ghế
+                for (let i = 0; i < seatRows.length; i++) {
+                    const row = seatRows[i].value.trim().toUpperCase();
+                    const seatNum = parseInt(seatNumbers[i].value.trim());
+
+                    console.log(`Row ${i + 1}: ${row}, SeatNum: ${seatNum}`);
+
+                    if (row && !isNaN(seatNum) && seatNum > 0) { // Kiểm tra giá trị hợp lệ
+                        rowCount++; // Tăng số lượng hàng, bao gồm trùng lặp
+                        totalSeats += seatNum; // Cộng dồn số ghế của mỗi hàng
+                        seatsByRow[row] = Math.max(seatsByRow[row] || 0, seatNum); // Lưu số ghế lớn nhất cho mỗi hàng
+                        maxSeatsPerRow = Math.max(maxSeatsPerRow, seatNum); // Cập nhật số ghế tối đa (tổng cột)
+                    } else {
+                        console.warn(`Dữ liệu không hợp lệ tại hàng ${i + 1}: Hàng="${row}", Số ghế="${seatNumbers[i].value}"`);
+                    }
+                }
+
+                const columnCount = maxSeatsPerRow; // Số cột là số ghế tối đa trong một hàng
+
+                console.log("Row Count:", rowCount, "Column Count:", columnCount, "Total Seats:", totalSeats);
+
+                // Kiểm tra và cập nhật #seatSummary
+                const seatSummary = document.getElementById('seatSummary');
+                if (seatSummary) {
+                    seatSummary.innerHTML = `
+                        <span>Tổng số hàng: ${rowCount}, Tổng số cột: ${columnCount}, Tổng số ghế: ${totalSeats}</span>
+                    `;
+                    console.log("Updated seatSummary with:", seatSummary.innerHTML);
+                } else {
+                    console.error("Phần tử #seatSummary không tồn tại trong DOM!");
+                }
+            }
+
+            // Hàm thêm Show Time mới
+            let showTimeCount = 1;
+            function addNewShowTime() {
+                showTimeCount++;
+                const showTimeList = document.getElementById('showTimeList');
+                const newShowTime = document.createElement('div');
+                newShowTime.className = 'show-time';
+                newShowTime.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="text-white">Show Time</h6>
+                        <button class="add-ticket-btn" onclick="removeShowTime(this)">Xóa</button>
+                    </div>
+                    <div class="form-group filter-group">
+                        <label for="showStartDate_${showTimeCount}" class="text-white">Ngày bắt đầu</label>
+                        <input type="datetime-local" name="showStartDate" id="showStartDate_${showTimeCount}" class="datetime-local" placeholder="Chọn ngày bắt đầu">
+                    </div>
+                    <div class="form-group filter-group">
+                        <label for="showEndDate_${showTimeCount}" class="text-white">Ngày kết thúc</label>
+                        <input type="datetime-local" name="showEndDate" id="showEndDate_${showTimeCount}" class="datetime-local" placeholder="Chọn ngày kết thúc">
+                    </div>
+                    <div id="ticketList_${showTimeCount}" class="mt-3"></div>
+                    <button class="add-ticket-btn w-100 mt-3" data-bs-toggle="modal" data-bs-target="#newTicketModal" data-show-time="${showTimeCount}">+ Thêm loại vé</button>
+                `;
+                showTimeList.appendChild(newShowTime);
+                // Không cần khởi tạo Flatpickr nữa, vì dùng datetime-local
+            }
+
+            // Hàm xóa Show Time
+            function removeShowTime(button) {
+                button.closest('.show-time').remove();
+            }
+
+            // Hàm lưu loại vé mới (cập nhật để xử lý datetime-local)
+            function saveNewTicket() {
+                const showTimeId = document.getElementById('newTicketModal').getAttribute('data-show-time');
+                const ticketName = document.getElementById('modalTicketName').value;
+                const ticketDescription = document.getElementById('modalTicketDescription').value;
+                const ticketPrice = document.getElementById('modalTicketPrice').value;
+                const ticketQuantity = document.getElementById('modalTicketQuantity').value;
+                const ticketStartDate = document.getElementById('modalTicketStartDate').value;
+                const ticketEndDate = document.getElementById('modalTicketEndDate').value;
+
+                if (ticketName && ticketDescription && ticketPrice && ticketQuantity && ticketStartDate && ticketEndDate) {
+                    const ticketList = document.getElementById(`ticketList_${showTimeId}`);
+                    const newTicket = document.createElement('div');
+                    newTicket.className = 'saved-ticket';
+                    newTicket.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="text-white">${ticketName}</h6>
+                            <button class="add-ticket-btn" onclick="removeTicket(this, '${showTimeId}')">Xóa</button>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-white">Mô tả</label>
+                            <input type="text" class="form-control" value="${ticketDescription}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-white">Giá (VND)</label>
+                            <input type="number" class="form-control" value="${ticketPrice}" readonly step="1000">
+                        </div>
+                        <div class="form-group">
+                            <label class="text-white">Số lượng</label>
+                            <input type="number" class="form-control" value="${ticketQuantity}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-white">Ngày bắt đầu bán</label>
+                            <input type="text" class="form-control" value="${ticketStartDate}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-white">Ngày kết thúc bán</label>
+                            <input type="text" class="form-control" value="${ticketEndDate}" readonly>
+                        </div>
+                    `;
+                    ticketList.appendChild(newTicket);
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('newTicketModal'));
+                    modal.hide();
+                    document.getElementById('modalTicketName').value = '';
+                    document.getElementById('modalTicketDescription').value = '';
+                    document.getElementById('modalTicketPrice').value = '';
+                    document.getElementById('modalTicketQuantity').value = '';
+                    document.getElementById('modalTicketStartDate').value = '';
+                    document.getElementById('modalTicketEndDate').value = '';
+                } else {
+                    alert("Vui lòng điền đầy đủ thông tin!");
+                }
+            }
+
+            // Hàm xóa loại vé
+            function removeTicket(button, showTimeId) {
+                button.closest('.saved-ticket').remove();
+            }
+
+            // Khởi tạo khi trang load (không cần Flatpickr nữa)
+            document.addEventListener('DOMContentLoaded', () => {
+                showTab('event-info', null); // Gọi với event=null để tránh lỗi
+                // Thêm sự kiện cho các input seat
+                const seatInputs = document.querySelectorAll('input[name="seatRow[]"], input[name="seatNumber[]"]');
+                seatInputs.forEach(input => {
+                    input.addEventListener('input', calculateSeatSummary);
+                });
+                // Gọi lần đầu để tính tổng nếu có dữ liệu
+                calculateSeatSummary();
+            });
+
+            // Hàm showTab với kiểm tra event
+            function showTab(tabId, event) {
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.add('d-none');
+                });
+
+                // Show the selected tab content
+                document.getElementById(tabId).classList.remove('d-none');
+
+                // Update button styles
+                document.querySelectorAll('.tab-button').forEach(button => {
+                    button.classList.remove('active');
+                    button.classList.add('bg-gray-600');
+                });
+
+                // Highlight the active button (nếu event tồn tại)
+                if (event && event.target) {
+                    event.target.classList.add('active');
+                    event.target.classList.remove('bg-gray-600');
+                } else {
+                    // Nếu không có event, tìm và highlight button tương ứng với tabId
+                    const activeButton = document.querySelector(`.tab-button[onclick*="showTab('${tabId}')"]`);
+                    if (activeButton) {
+                        activeButton.classList.add('active');
+                        activeButton.classList.remove('bg-gray-600');
+                    }
+                }
+            }
+
+            function nextTab() {
+                const currentTab = document.querySelector('.tab-content:not(.d-none)').id;
+                if (currentTab === 'event-info') {
+                    showTab('time-logistics', null);
+                }
+            }
+        </script>
+    </body>
+</html>
